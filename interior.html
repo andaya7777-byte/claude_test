@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스튜디오 온채 | 공간에 온기를 더하는 인테리어 스튜디오</title>
+<meta name="description" content="스튜디오 온채는 주거, 상업, 오피스 공간을 위한 프리미엄 인테리어 디자인 스튜디오입니다. 상담부터 시공까지, 당신의 라이프스타일에 맞는 공간을 완성합니다.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
+<script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#FDFBF7',
+          cream2: '#FAF5EC',
+          ink: '#2B2620',
+          accent: '#B8734A',
+          accentdark: '#8F5934',
+          sage: '#8B9A7D',
+        },
+        fontFamily: {
+          sans: ['Pretendard', 'system-ui', '-apple-system', 'sans-serif'],
+          serif: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+        },
+      },
+    },
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { -webkit-font-smoothing: antialiased; }
+  .noise-overlay {
+    position: fixed; inset: 0; z-index: 60; pointer-events: none;
+    opacity: 0.035; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .reveal { opacity: 0; transform: translateY(2rem); filter: blur(4px); }
+  .reveal.in-view {
+    animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  .float-slow { animation: float 7s ease-in-out infinite; }
+  .float-slower { animation: float 9s ease-in-out infinite; animation-delay: 1.2s; }
+  .btn-magnetic { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  .btn-magnetic:hover { transform: scale(1.02); }
+  .btn-magnetic:active { transform: scale(0.98); }
+  .card-hover { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  .card-hover:hover { transform: translateY(-6px); }
+  .nav-scrolled { background-color: rgba(253, 251, 247, 0.75); backdrop-filter: blur(20px); border-color: rgba(43, 38, 32, 0.08); }
+  #mobile-menu { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+</style>
+</head>
+<body class="bg-cream text-ink font-sans antialiased">
+
+<div class="noise-overlay"></div>
+
+<!-- Navigation -->
+<header id="site-nav" class="fixed top-4 inset-x-0 z-50 transition-all duration-500">
+  <div class="max-w-6xl mx-auto px-4">
+    <div id="nav-pill" class="flex items-center justify-between rounded-full border border-ink/10 px-5 py-3 sm:px-6 transition-all duration-500">
+      <a href="#top" class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center">
+          <iconify-icon icon="solar:home-2-linear" class="text-accent text-lg"></iconify-icon>
+        </span>
+        <span class="font-serif text-lg tracking-tight">스튜디오 온채</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-sm text-ink/70">
+        <a href="#about" class="hover:text-ink transition-colors">소개</a>
+        <a href="#services" class="hover:text-ink transition-colors">서비스</a>
+        <a href="#portfolio" class="hover:text-ink transition-colors">포트폴리오</a>
+        <a href="#testimonials" class="hover:text-ink transition-colors">고객 후기</a>
+        <a href="#contact" class="hover:text-ink transition-colors">문의</a>
+      </nav>
+      <a href="#contact" class="btn-magnetic hidden md:inline-flex items-center gap-2 rounded-full bg-ink text-cream px-5 py-2.5 text-sm font-medium hover:shadow-[0_8px_24px_-8px_rgba(43,38,32,0.4)]">
+        상담 신청
+        <span class="w-5 h-5 rounded-full bg-cream/15 flex items-center justify-center">
+          <iconify-icon icon="solar:arrow-right-up-linear" class="text-xs"></iconify-icon>
+        </span>
+      </a>
+      <button id="menu-toggle" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-ink/5">
+        <iconify-icon icon="solar:hamburger-menu-linear" class="text-xl"></iconify-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu overlay -->
+  <div id="mobile-menu" class="md:hidden fixed inset-0 -z-10 opacity-0 pointer-events-none bg-cream/98 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 text-xl">
+    <a href="#about" class="mobile-link">소개</a>
+    <a href="#services" class="mobile-link">서비스</a>
+    <a href="#portfolio" class="mobile-link">포트폴리오</a>
+    <a href="#testimonials" class="mobile-link">고객 후기</a>
+    <a href="#contact" class="mobile-link rounded-full bg-ink text-cream px-6 py-3 text-base">상담 신청</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO: Editorial Split -->
+  <section class="relative min-h-[100dvh] flex items-center pt-32 pb-16 overflow-hidden">
+    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-accent/10 blur-3xl float-slow"></div>
+    <div class="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-sage/10 blur-3xl float-slower"></div>
+
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div class="reveal" style="--i:0">
+        <span class="inline-flex items-center rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.15em] font-medium bg-accent/10 text-accentdark mb-6">
+          Since 2014 · 인테리어 디자인 스튜디오
+        </span>
+        <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl leading-snug break-keep tracking-tight">
+          일상이 머무는 공간에<br><span class="text-accent italic">온기</span>를 그립니다
+        </h1>
+        <p class="mt-6 text-base md:text-lg text-ink/65 leading-relaxed max-w-[52ch] break-keep">
+          스튜디오 온채는 주거 공간부터 상업 공간까지, 사는 사람의 생활 방식을 먼저 읽고 그 위에 디자인을 얹습니다. 상담부터 준공까지 한 팀이 끝까지 책임집니다.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-4">
+          <a href="#contact" class="btn-magnetic inline-flex items-center gap-2 rounded-full bg-ink text-cream px-8 py-4 text-base font-medium hover:shadow-[0_12px_32px_-8px_rgba(43,38,32,0.45)]">
+            무료 상담 신청하기
+            <span class="w-8 h-8 rounded-full bg-cream/15 flex items-center justify-center">
+              <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+            </span>
+          </a>
+          <a href="#portfolio" class="btn-magnetic inline-flex items-center gap-2 rounded-full border border-ink/15 px-8 py-4 text-base font-medium hover:bg-ink/5">
+            포트폴리오 보기
+          </a>
+        </div>
+      </div>
+
+      <div class="reveal relative" style="--i:1">
+        <div class="rounded-[2.5rem] bg-white/40 ring-1 ring-ink/5 p-2">
+          <img
+            src="https://picsum.photos/seed/onchae-hero-living/900/1100"
+            alt="스튜디오 온채가 시공한 거실 인테리어"
+            class="w-full h-[420px] md:h-[520px] object-cover rounded-[2rem]"
+            loading="eager"
+            decoding="async">
+        </div>
+        <div class="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(43,38,32,0.15)] p-4 flex items-center gap-3 float-slow">
+          <span class="w-11 h-11 rounded-full bg-sage/15 flex items-center justify-center">
+            <iconify-icon icon="solar:medal-ribbons-star-linear" class="text-sage text-xl"></iconify-icon>
+          </span>
+          <div>
+            <p class="text-sm font-semibold">고객 만족도 4.91</p>
+            <p class="text-xs text-ink/50">누적 후기 286건 기준</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF / METRICS BAR -->
+  <section class="border-y border-ink/8 bg-cream2">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div class="reveal" style="--i:0">
+        <p class="font-serif text-3xl md:text-4xl text-accent" data-counter="312">0</p>
+        <p class="mt-2 text-sm text-ink/60 break-keep">누적 시공 프로젝트</p>
+      </div>
+      <div class="reveal" style="--i:1">
+        <p class="font-serif text-3xl md:text-4xl text-accent">4.91<span class="text-xl">/5.0</span></p>
+        <p class="mt-2 text-sm text-ink/60 break-keep">고객 만족도</p>
+      </div>
+      <div class="reveal" style="--i:2">
+        <p class="font-serif text-3xl md:text-4xl text-accent" data-counter="11">0</p>
+        <p class="mt-2 text-sm text-ink/60 break-keep">평균 설계 경력 (년)</p>
+      </div>
+      <div class="reveal" style="--i:3">
+        <p class="font-serif text-3xl md:text-4xl text-accent" data-counter="68">0<span class="text-xl">%</span></p>
+        <p class="mt-2 text-sm text-ink/60 break-keep">기존 고객 재의뢰율</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / PHILOSOPHY -->
+  <section id="about" class="py-24 md:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div class="reveal order-2 md:order-1" style="--i:0">
+        <div class="grid grid-cols-2 gap-4">
+          <img src="https://picsum.photos/seed/onchae-about-1/500/620" alt="스튜디오 온채 디자이너 미팅 장면" class="rounded-2xl w-full h-64 md:h-80 object-cover mt-8" loading="lazy" decoding="async">
+          <img src="https://picsum.photos/seed/onchae-about-2/500/620" alt="스튜디오 온채가 시공한 주방 공간" class="rounded-2xl w-full h-64 md:h-80 object-cover" loading="lazy" decoding="async">
+        </div>
+      </div>
+      <div class="reveal order-1 md:order-2" style="--i:1">
+        <span class="inline-flex items-center rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.15em] font-medium bg-sage/10 text-sage mb-6">
+          Our Philosophy
+        </span>
+        <h2 class="font-serif text-3xl md:text-4xl leading-snug break-keep tracking-tight">
+          좋은 공간은<br>요란하지 않습니다
+        </h2>
+        <p class="mt-6 text-base md:text-lg text-ink/65 leading-relaxed break-keep max-w-[50ch]">
+          트렌드를 따라가는 디자인이 아니라, 그 안에서 생활할 사람의 동선과 취향을 오래 관찰한 뒤 공간을 제안합니다. 스튜디오 온채의 모든 프로젝트는 상담 — 공간 진단 — 설계 — 시공 — 사후 관리까지 한 팀이 맡아 진행됩니다.
+        </p>
+        <ul class="mt-8 space-y-4">
+          <li class="flex items-start gap-3">
+            <iconify-icon icon="solar:check-circle-linear" class="text-accent text-xl mt-0.5 shrink-0"></iconify-icon>
+            <span class="text-ink/70 break-keep">전담 디자이너 1인이 상담부터 준공까지 함께합니다</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <iconify-icon icon="solar:check-circle-linear" class="text-accent text-xl mt-0.5 shrink-0"></iconify-icon>
+            <span class="text-ink/70 break-keep">모든 견적과 시공 일정을 투명하게 공유합니다</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <iconify-icon icon="solar:check-circle-linear" class="text-accent text-xl mt-0.5 shrink-0"></iconify-icon>
+            <span class="text-ink/70 break-keep">준공 후 1년간 하자 보수를 책임집니다</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES: Bento Grid -->
+  <section id="services" class="py-24 md:py-32 bg-cream2">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal max-w-2xl mb-16" style="--i:0">
+        <span class="inline-flex items-center rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.15em] font-medium bg-accent/10 text-accentdark mb-6">
+          Services
+        </span>
+        <h2 class="font-serif text-3xl md:text-4xl leading-snug break-keep tracking-tight">공간의 목적에 맞는<br>다섯 가지 디자인 영역</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <div class="reveal card-hover md:col-span-2 md:row-span-2 bg-white rounded-[2rem] ring-1 ring-ink/5 p-8 flex flex-col justify-between min-h-[280px]" style="--i:1">
+          <span class="w-12 h-12 rounded-full bg-accent/15 flex items-center justify-center">
+            <iconify-icon icon="solar:home-2-linear" class="text-accent text-2xl"></iconify-icon>
+          </span>
+          <div>
+            <h3 class="font-serif text-xl mt-8 mb-2">주거 공간 리모델링</h3>
+            <p class="text-sm text-ink/60 leading-relaxed break-keep">아파트, 빌라, 단독주택의 구조 변경부터 마감재 선정까지 전 과정을 설계합니다.</p>
+          </div>
+        </div>
+
+        <div class="reveal card-hover bg-white rounded-[2rem] ring-1 ring-ink/5 p-7 min-h-[200px] flex flex-col justify-between" style="--i:2">
+          <span class="w-11 h-11 rounded-full bg-sage/15 flex items-center justify-center">
+            <iconify-icon icon="solar:buildings-2-linear" class="text-sage text-xl"></iconify-icon>
+          </span>
+          <h3 class="font-serif text-lg mt-6">상업 공간 디자인</h3>
+        </div>
+
+        <div class="reveal card-hover bg-white rounded-[2rem] ring-1 ring-ink/5 p-7 min-h-[200px] flex flex-col justify-between" style="--i:3">
+          <span class="w-11 h-11 rounded-full bg-accent/15 flex items-center justify-center">
+            <iconify-icon icon="solar:pen-new-square-linear" class="text-accent text-xl"></iconify-icon>
+          </span>
+          <h3 class="font-serif text-lg mt-6">오피스 인테리어</h3>
+        </div>
+
+        <div class="reveal card-hover bg-white rounded-[2rem] ring-1 ring-ink/5 p-7 min-h-[200px] flex flex-col justify-between" style="--i:4">
+          <span class="w-11 h-11 rounded-full bg-sage/15 flex items-center justify-center">
+            <iconify-icon icon="solar:ruler-cross-pen-linear" class="text-sage text-xl"></iconify-icon>
+          </span>
+          <h3 class="font-serif text-lg mt-6">공간 컨설팅</h3>
+        </div>
+
+        <div class="reveal card-hover bg-white rounded-[2rem] ring-1 ring-ink/5 p-7 min-h-[200px] flex flex-col justify-between" style="--i:5">
+          <span class="w-11 h-11 rounded-full bg-accent/15 flex items-center justify-center">
+            <iconify-icon icon="solar:palette-2-linear" class="text-accent text-xl"></iconify-icon>
+          </span>
+          <h3 class="font-serif text-lg mt-6">가구·자재 소싱</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO: Zig-Zag -->
+  <section id="portfolio" class="py-24 md:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal max-w-2xl mb-16" style="--i:0">
+        <span class="inline-flex items-center rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.15em] font-medium bg-sage/10 text-sage mb-6">
+          Portfolio
+        </span>
+        <h2 class="font-serif text-3xl md:text-4xl leading-snug break-keep tracking-tight">최근 완성한 공간들</h2>
+      </div>
+
+      <div class="space-y-20">
+        <!-- Case 1: image left -->
+        <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-10 items-center" style="--i:1">
+          <img src="https://picsum.photos/seed/onchae-case-yeonhui/700/560" alt="연희동 34평 아파트 리모델링 프로젝트" class="rounded-[2rem] w-full h-72 md:h-96 object-cover" loading="lazy" decoding="async">
+          <div>
+            <p class="text-xs uppercase tracking-[0.15em] text-accent mb-3">주거 · 아파트 리모델링</p>
+            <h3 class="font-serif text-2xl md:text-3xl mb-4 break-keep">연희동 34평, 채광을 살린 개방형 주방</h3>
+            <p class="text-ink/60 leading-relaxed break-keep max-w-[48ch]">벽식 구조를 개방형으로 바꾸고, 거실과 주방의 동선을 하나로 연결해 공간감을 두 배로 넓혔습니다.</p>
+            <a href="#contact" class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors group">
+              프로젝트 자세히 보기
+              <iconify-icon icon="solar:arrow-right-linear" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+            </a>
+          </div>
+        </div>
+
+        <!-- Case 2: image right -->
+        <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-10 items-center" style="--i:2">
+          <div class="md:order-2">
+            <img src="https://picsum.photos/seed/onchae-case-seongsu/700/560" alt="성수동 카페 상업 공간 디자인 프로젝트" class="rounded-[2rem] w-full h-72 md:h-96 object-cover" loading="lazy" decoding="async">
+          </div>
+          <div class="md:order-1">
+            <p class="text-xs uppercase tracking-[0.15em] text-sage mb-3">상업 · 카페 디자인</p>
+            <h3 class="font-serif text-2xl md:text-3xl mb-4 break-keep">성수동 골목 카페, 콘크리트와 원목의 대비</h3>
+            <p class="text-ink/60 leading-relaxed break-keep max-w-[48ch]">노출 콘크리트 천장과 원목 가구를 대비시켜 절제된 무드를 완성한 36평 규모의 카페 공간입니다.</p>
+            <a href="#contact" class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors group">
+              프로젝트 자세히 보기
+              <iconify-icon icon="solar:arrow-right-linear" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+            </a>
+          </div>
+        </div>
+
+        <!-- Case 3: image left -->
+        <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-10 items-center" style="--i:3">
+          <img src="https://picsum.photos/seed/onchae-case-pangyo/700/560" alt="판교 오피스 인테리어 프로젝트" class="rounded-[2rem] w-full h-72 md:h-96 object-cover" loading="lazy" decoding="async">
+          <div>
+            <p class="text-xs uppercase tracking-[0.15em] text-accent mb-3">오피스 · 스타트업 사옥</p>
+            <h3 class="font-serif text-2xl md:text-3xl mb-4 break-keep">판교 스타트업 사옥, 집중과 휴식의 경계</h3>
+            <p class="text-ink/60 leading-relaxed break-keep max-w-[48ch]">업무 집중 구역과 라운지 구역을 소재와 조도로 구분해, 50인 규모 사무 공간의 동선을 재설계했습니다.</p>
+            <a href="#contact" class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors group">
+              프로젝트 자세히 보기
+              <iconify-icon icon="solar:arrow-right-linear" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS: Masonry -->
+  <section id="testimonials" class="py-24 md:py-32 bg-cream2">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal max-w-2xl mb-16" style="--i:0">
+        <span class="inline-flex items-center rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.15em] font-medium bg-accent/10 text-accentdark mb-6">
+          Testimonials
+        </span>
+        <h2 class="font-serif text-3xl md:text-4xl leading-snug break-keep tracking-tight">고객이 남긴 이야기</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="reveal card-hover bg-white rounded-[2rem] ring-1 ring-ink/5 p-8 md:mt-8" style="--i:1">
+          <div class="flex gap-1 text-accent mb-4">
+            <iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon>
+          </div>
+          <p class="text-ink/70 leading-relaxed break-keep">"상담 때 제안받은 도면과 실제 시공 결과가 거의 그대로였어요. 일정 변경도 미리 다 공유해주셔서 불안하지 않았습니다."</p>
+          <div class="mt-6 flex items-center gap-3">
+            <img src="https://i.pravatar.cc/150?u=hayoonseo-onchae" alt="하윤서 고객 프로필" class="w-11 h-11 rounded-full object-cover" loading="lazy">
+            <div>
+              <p class="text-sm font-semibold">하윤서</p>
+              <p class="text-xs text-ink/50">연희동 아파트 리모델링</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal card-hover bg-white rounded-[2rem] ring-1 ring-ink/5 p-8" style="--i:2">
+          <div class="flex gap-1 text-accent mb-4">
+            <iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon>
+          </div>
+          <p class="text-ink/70 leading-relaxed break-keep">"카페 오픈 일정이 빠듯했는데도 마감 품질을 타협하지 않고 끝까지 챙겨주셨어요. 손님들이 공간 사진부터 찍어요."</p>
+          <div class="mt-6 flex items-center gap-3">
+            <img src="https://i.pravatar.cc/150?u=parkdohyun-onchae" alt="박도현 고객 프로필" class="w-11 h-11 rounded-full object-cover" loading="lazy">
+            <div>
+              <p class="text-sm font-semibold">박도현</p>
+              <p class="text-xs text-ink/50">성수동 카페 대표</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal card-hover bg-white rounded-[2rem] ring-1 ring-ink/5 p-8 md:mt-8" style="--i:3">
+          <div class="flex gap-1 text-accent mb-4">
+            <iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon>
+          </div>
+          <p class="text-ink/70 leading-relaxed break-keep">"50인 규모 사무 공간이라 걱정이 많았는데, 팀별 요구사항을 하나하나 반영해서 만족도가 높습니다."</p>
+          <div class="mt-6 flex items-center gap-3">
+            <img src="https://i.pravatar.cc/150?u=jeongminjun-onchae" alt="정민준 고객 프로필" class="w-11 h-11 rounded-full object-cover" loading="lazy">
+            <div>
+              <p class="text-sm font-semibold">정민준</p>
+              <p class="text-xs text-ink/50">판교 스타트업 대표</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA: Full-Bleed Dark -->
+  <section id="contact" class="relative py-24 md:py-32 bg-ink text-cream overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-accent/20 blur-3xl float-slow"></div>
+    <div class="absolute bottom-0 right-1/4 w-72 h-72 rounded-full bg-sage/20 blur-3xl float-slower"></div>
+
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="reveal inline-flex items-center rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.15em] font-medium bg-cream/10 text-cream/80 mb-6" style="--i:0">
+        Free Consultation
+      </span>
+      <h2 class="reveal font-serif text-3xl md:text-5xl leading-snug break-keep tracking-tight" style="--i:1">
+        지금 공간을 이야기해보세요
+      </h2>
+      <p class="reveal mt-6 text-cream/60 text-base md:text-lg leading-relaxed break-keep max-w-[46ch] mx-auto" style="--i:2">
+        평면도만 있어도 괜찮습니다. 30분 무료 상담으로 예산과 방향을 함께 잡아드립니다.
+      </p>
+      <div class="reveal mt-10 flex flex-wrap justify-center gap-4" style="--i:3">
+        <a href="tel:0212345678" class="btn-magnetic inline-flex items-center gap-2 rounded-full bg-accent text-cream px-8 py-4 text-base font-medium hover:shadow-[0_0_30px_rgba(184,115,74,0.35)]">
+          <iconify-icon icon="solar:phone-calling-linear"></iconify-icon>
+          02-1234-5678
+        </a>
+        <a href="mailto:hello@studio-onchae.kr" class="btn-magnetic inline-flex items-center gap-2 rounded-full border border-cream/20 px-8 py-4 text-base font-medium hover:bg-cream/5">
+          <iconify-icon icon="solar:letter-linear"></iconify-icon>
+          이메일로 문의하기
+        </a>
+      </div>
+      <div class="reveal mt-12 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-cream/50" style="--i:4">
+        <span class="flex items-center gap-2"><iconify-icon icon="solar:shield-check-linear"></iconify-icon>준공 후 1년 하자보수</span>
+        <span class="flex items-center gap-2"><iconify-icon icon="solar:clock-circle-linear"></iconify-icon>평균 상담 응답 6시간</span>
+        <span class="flex items-center gap-2"><iconify-icon icon="solar:users-group-rounded-linear"></iconify-icon>전담 디자이너 배정</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-cream2 border-t border-ink/8">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 md:grid-cols-3 gap-10">
+    <div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center">
+          <iconify-icon icon="solar:home-2-linear" class="text-accent text-lg"></iconify-icon>
+        </span>
+        <span class="font-serif text-lg">스튜디오 온채</span>
+      </div>
+      <p class="text-sm text-ink/55 leading-relaxed break-keep max-w-[36ch]">
+        일상이 머무는 공간에 온기를 더하는 인테리어 디자인 스튜디오입니다.
+      </p>
+      <div class="flex gap-3 mt-6">
+        <a href="#" aria-label="인스타그램" class="w-9 h-9 rounded-full bg-ink/5 flex items-center justify-center hover:bg-ink/10 transition-colors">
+          <iconify-icon icon="solar:instagram-linear"></iconify-icon>
+        </a>
+        <a href="#" aria-label="블로그" class="w-9 h-9 rounded-full bg-ink/5 flex items-center justify-center hover:bg-ink/10 transition-colors">
+          <iconify-icon icon="solar:document-text-linear"></iconify-icon>
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-sm font-semibold mb-4">바로가기</p>
+      <ul class="space-y-3 text-sm text-ink/55">
+        <li><a href="#about" class="hover:text-ink transition-colors">스튜디오 소개</a></li>
+        <li><a href="#services" class="hover:text-ink transition-colors">서비스</a></li>
+        <li><a href="#portfolio" class="hover:text-ink transition-colors">포트폴리오</a></li>
+        <li><a href="#testimonials" class="hover:text-ink transition-colors">고객 후기</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="text-sm font-semibold mb-4">연락처</p>
+      <ul class="space-y-3 text-sm text-ink/55">
+        <li class="flex items-center gap-2"><iconify-icon icon="solar:map-point-linear"></iconify-icon>서울시 마포구 연남로 22길 8</li>
+        <li class="flex items-center gap-2"><iconify-icon icon="solar:phone-linear"></iconify-icon>02-1234-5678</li>
+        <li class="flex items-center gap-2"><iconify-icon icon="solar:letter-linear"></iconify-icon>hello@studio-onchae.kr</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-ink/8 py-6">
+    <p class="text-center text-xs text-ink/40">© 2026 Studio Onchae. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  // 모바일 메뉴 토글
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let menuOpen = false;
+  menuToggle.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    mobileMenu.classList.toggle('opacity-0', !menuOpen);
+    mobileMenu.classList.toggle('pointer-events-none', !menuOpen);
+    mobileMenu.classList.toggle('opacity-100', menuOpen);
+  });
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      menuOpen = false;
+      mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+      mobileMenu.classList.remove('opacity-100');
+    });
+  });
+
+  // 스크롤 시 네비게이션 배경
+  const navPill = document.getElementById('nav-pill');
+  window.addEventListener('scroll', () => {
+    navPill.classList.toggle('nav-scrolled', window.scrollY > 40);
+    navPill.classList.toggle('bg-cream/0', window.scrollY <= 40);
+  }, { passive: true });
+
+  // 스크롤 진입 애니메이션
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // 숫자 카운트업 애니메이션
+  const counters = document.querySelectorAll('[data-counter]');
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.counter, 10);
+      const suffix = el.querySelector('span') ? el.querySelector('span').outerHTML : '';
+      let current = 0;
+      const step = Math.max(1, Math.round(target / 40));
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        el.innerHTML = current + suffix;
+      }, 30);
+      counterObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el => counterObserver.observe(el));
+</script>
+
+</body>
+</html>
